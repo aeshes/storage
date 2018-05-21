@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/aeshes/storage/meta"
 	"github.com/gorilla/mux"
 )
 
@@ -23,7 +24,7 @@ func check(err error) {
 func testingEndpoint(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
-	meta, err := ParseMeta(r)
+	meta, err := meta.ParseMeta(r)
 	check(err)
 
 	fmt.Println(meta.FileName)
@@ -99,7 +100,7 @@ func handleFileID(w http.ResponseWriter, r *http.Request) {
 // PUT request
 //Atomically creates "small" file which can be POSTed in one request
 func handleCreateAtomically(w http.ResponseWriter, r *http.Request) {
-	meta, err := ParseMeta(r)
+	meta, err := meta.ParseMeta(r)
 	if err != nil {
 		log.Println("In handleCreateAtomically: ", err)
 		respondWithError(w, 400, "cant parse meta info")

@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-
+	"github.com/aeshes/storage/meta"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -56,7 +56,7 @@ func (s *DataStorage) CreateGridFile(name string) (*mgo.GridFile, error) {
 }
 
 // InsertMetaInfo inserta meta information about new file into table 'meta'
-func (s *DataStorage) InsertMetaInfo(file *mgo.GridFile, m *FileMeta) {
+func (s *DataStorage) InsertMetaInfo(file *mgo.GridFile, m *meta.FileMeta) {
 
 	// Open meta collection
 	meta := s.session.DB(MongoDefaultDB).C(FileMetaCollection)
@@ -75,9 +75,9 @@ func (s *DataStorage) InsertMetaInfo(file *mgo.GridFile, m *FileMeta) {
 // QueryMeta queries meta information from collection 'meta'
 // about file identified by id, which must be a string representation
 //  of an ObjectId
-func (s *DataStorage) QueryMeta(id string) *FileMeta {
+func (s *DataStorage) QueryMeta(id string) *meta.FileMeta {
 	var reference bson.ObjectId
-	var meta FileMeta
+	var meta meta.FileMeta
 
 	if bson.IsObjectIdHex(id) {
 		reference = bson.ObjectIdHex(id)
@@ -96,7 +96,7 @@ func (s *DataStorage) QueryMeta(id string) *FileMeta {
 // StoreFromDisk stores disk file in GridFS
 // If local file's sha-256 is not equal to sha-256 value in FileMeta,
 // error is returned
-func (s *DataStorage) StoreFromDisk(file *LocalFile, meta *FileMeta) error {
+func (s *DataStorage) StoreFromDisk(file *LocalFile, meta *meta.FileMeta) error {
 	if file.Sha256() == meta.Hash {
 		gridFile, err := s.CreateGridFile(meta.Name)
 		if err != nil {

@@ -163,7 +163,7 @@ func parseSysID(sysID string) string {
 	return sysID
 }
 
-func (p *FileMeta) isValid() bool {
+func (p *FileMeta) IsValid() bool {
 	return p.Name != "" &&
 		p.Creator != "" &&
 		p.Hash != "" &&
